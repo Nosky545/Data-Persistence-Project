@@ -18,6 +18,7 @@ public class MainManager : MonoBehaviour
     
     private bool m_GameOver = false;
 
+    private bool newBestScore = false;
     
     // Start is called before the first frame update
     void Start()
@@ -66,11 +67,24 @@ public class MainManager : MonoBehaviour
     {
         m_Points += point;
         ScoreText.text = $"Score : {m_Points}";
+
+        if (m_Points > DataManager.Instance.BestScore)
+        {
+            DataManager.Instance.BestScore = m_Points;
+            DataManager.Instance.BestPlayer = DataManager.Instance.PlayerName;
+            newBestScore = true;
+        }
     }
 
     public void GameOver()
     {
         m_GameOver = true;
         GameOverText.SetActive(true);
+
+        if (newBestScore)
+        {
+            DataManager.Instance.SaveBestPlayer();
+            DataManager.Instance.SaveBestScore();
+        }
     }
 }
